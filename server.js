@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch'); // Import node-fetch
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args)); // Use node-fetch for Node.js
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // Replace with your Apps Script URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBuEiNqa5Tmkh83oTXKXZBdjx9MNdPKxgsgwD60q2VWCEsoJVKqv7hxfEDb56V2f9B/exec'; // Replace with your correct Apps Script URL
 
 app.post('/proxy', async (req, res) => {
   try {
