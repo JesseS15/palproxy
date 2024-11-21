@@ -1,15 +1,17 @@
 const express = require('express');
 const cors = require('cors');
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // Import node-fetch
 
 const app = express();
-app.use(cors()); // Automatically handle CORS for all routes
-app.use(express.json()); // Parse JSON body requests
+app.use(cors());
+app.use(express.json());
 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // Replace with your Apps Script URL
 
 app.post('/proxy', async (req, res) => {
   try {
+    console.log('Received request:', req.body); // Log incoming request for debugging
+
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
       headers: {
@@ -19,14 +21,15 @@ app.post('/proxy', async (req, res) => {
     });
 
     const data = await response.json();
+    console.log('Google Apps Script response:', data); // Log the response from Google Apps Script
     res.status(response.status).json(data);
   } catch (error) {
-    console.error('Error proxying request:', error);
-    res.status(500).send('Error');
+    console.error('Error proxying request:', error); // Log the error
+    res.status(500).send('Error proxying request');
   }
 });
 
-// Handle OPTIONS requests for preflight
+// Handle OPTIONS requests (for preflight checks)
 app.options('/proxy', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
